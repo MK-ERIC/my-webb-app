@@ -1,13 +1,14 @@
-// index.js
-const http = require('http');
+const express = require('express');
+const app = express();
 
-const server = http.createServer((req, res) => {
-  res.statusCode = 200;
-  res.setHeader('Content-Type', 'text/plain');
-  res.end('Hello, world! This is my web app.\n');
+// Existing routes
+app.get('/', (req, res) => {
+  res.send('Home Page');
 });
 
-const PORT = 3000;
-server.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}/`);
+// New /about route
+app.get('/about', (req, res) => {
+  res.send('About Page');
 });
+
+app.listen(3000, () => console.log('Server running on port 3000'));
