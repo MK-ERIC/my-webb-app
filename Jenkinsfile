@@ -1,10 +1,6 @@
 pipeline {
     agent any
 
-    environment {
-        NODE_VERSION = '18'
-    }
-
     stages {
         stage('Checkout') {
             steps {
@@ -16,15 +12,14 @@ pipeline {
         stage('Install Node.js') {
             steps {
                 echo 'Installing Node.js dependencies...'
-                sh 'npm install'
+                bat 'npm install'
             }
         }
 
         stage('Run Tests') {
             steps {
                 echo 'Running tests...'
-                // If no tests exist, this will just print a message
-                sh 'npm test || echo "No tests defined"'
+                bat 'npm test || echo No tests defined'
             }
         }
     }
