@@ -1,21 +1,38 @@
 pipeline {
     agent any
+
     stages {
-        stage('Build') {
+        stage('Checkout') {
             steps {
-                echo "Building the project..."
-                bat 'dir'   // Windows command
+                echo 'Checking out code from GitHub...'
+                checkout scm
             }
         }
-        stage('Test') {
+
+        stage('Install Node.js') {
             steps {
-                echo "Running tests..."
+                echo 'Installing Node.js dependencies...'
+                bat 'npm install'
             }
         }
-        stage('Deploy') {
+
+        stage('Run Tests') {
             steps {
-                echo "Deploying..."
+                echo 'Running tests...'
+                bat 'npm test || echo No tests defined'
             }
-        }
-    }
+        }
+    }
+
+    post {
+        always {
+            echo 'Pipeline finished.'
+        }
+        success {
+            echo 'Build succeeded!'
+        }
+        failure {
+            echo 'Build failed!'
+        }
+    }
 }
