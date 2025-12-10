@@ -2,37 +2,38 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout') {
+
+        stage('Checkout Code') {
             steps {
-                echo 'Checking out code from GitHub...'
-                checkout scm
+                git branch: 'main', url: 'https://github.com/MK-ERIC/mywebapp.git'
             }
         }
 
         stage('Install Node.js') {
             steps {
-                echo 'Installing Node.js dependencies...'
-                bat 'npm install'
+                sh '''
+                echo "Installing Node.js..."
+                curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+                sudo apt-get install -y nodejs
+                node -v
+                npm -v
+                '''
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                sh '''
+                echo "Installing npm dependencies..."
+                npm install
+                '''
             }
         }
 
         stage('Run Tests') {
             steps {
-                echo 'Running tests...'
-                bat 'npm test || echo No tests defined'
+                sh '''
+                echo "Running tests..."
+                npm test || echo "No tests found"
+                '''
             }
-        }
-    }
-
-    post {
-        always {
-            echo 'Pipeline finished.'
-        }
-        success {
-            echo 'Build succeeded!'
-        }
-        failure {
-            echo 'Build failed!'
-        }
-    }
-}
